@@ -3,6 +3,7 @@ import User from "../models/user";
 import bcrypt from "bcryptjs";
 import { ENV } from "../lib/env";
 import { generateToken } from "../lib/token";
+import { sendWelcomeEmail } from "../emails/emailHandlers";
 
 interface RegisterBody {
   fullName: string;
@@ -107,6 +108,12 @@ export const register = async (req: Request<{}, {}, RegisterBody>, res: Response
       email: newUser.email,
       profilePic: newUser.profilePic,
     });
+
+    await sendWelcomeEmail(
+      savedUser.email,
+      savedUser.fullName,
+      ENV.CLIENT_URL || "http://localhost:5173/",
+    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.log("Error in register controller:", error.message);
