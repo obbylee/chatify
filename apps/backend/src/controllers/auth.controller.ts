@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { ENV } from "../lib/env";
 import { generateToken } from "../lib/token";
 import { sendWelcomeEmail } from "../emails/emailHandlers";
+import cloudinary from "../lib/cloudinary";
 
 interface RegisterBody {
   fullName: string;
@@ -35,10 +36,10 @@ export const login = async (req: Request<{}, {}, LoginBody>, res: Response) => {
     const token = generateToken(user._id.toString());
 
     res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // MS
-      httpOnly: true, // prevent XSS attacks: cross-site scripting
-      sameSite: "strict", // CSRF attacks
-      secure: ENV.NODE_ENV === "development" ? false : true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
+      httpOnly: true, // prevent XSS attacks
+      sameSite: "strict", // CSRF protection
+      secure: ENV.NODE_ENV !== "development",
     });
 
     res.status(200).json({
@@ -96,10 +97,10 @@ export const register = async (req: Request<{}, {}, RegisterBody>, res: Response
     const token = generateToken(savedUser._id.toString());
 
     res.cookie("jwt", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000, // MS
-      httpOnly: true, // prevent XSS attacks: cross-site scripting
-      sameSite: "strict", // CSRF attacks
-      secure: ENV.NODE_ENV === "development" ? false : true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in ms
+      httpOnly: true, // prevent XSS attacks
+      sameSite: "strict", // CSRF protection
+      secure: ENV.NODE_ENV !== "development",
     });
 
     res.status(201).json({
@@ -135,5 +136,26 @@ export const logout = async (req: Request, res: Response) => {
 };
 
 export const updateProfile = async (req: Request, res: Response) => {
-  res.json({ message: "update progfile endpoint" });
+  try {
+    const { profilePic } = req.body;
+    if (!profilePic) return res.status(400).json({ message: "Profile pic is required" });
+
+    const userId = req.user?.userId;
+
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: uploadResponse.secure_url },
+      { new: true, runValidators: true },
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log("Error in register controller:", error.message);
+    }
+
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
