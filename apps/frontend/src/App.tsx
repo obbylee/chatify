@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
+
 import ChatPage from "./pages/ChatPage";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
@@ -17,7 +19,7 @@ export default function App() {
         <Route path="/signup" element={<SignUpPage />} />
       </Routes>
 
-      {/* <Toaster /> */}
+      <Toaster />
     </div>
   );
 }
