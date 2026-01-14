@@ -94,6 +94,12 @@ export const register = async (req: Request<{}, {}, RegisterBody>, res: Response
 
     const savedUser = await newUser.save();
 
+    await sendWelcomeEmail(
+      savedUser.email,
+      savedUser.fullName,
+      ENV.CLIENT_URL || "http://localhost:5173/",
+    );
+
     const token = generateToken(savedUser._id.toString());
 
     res.cookie("jwt", token, {
@@ -109,12 +115,6 @@ export const register = async (req: Request<{}, {}, RegisterBody>, res: Response
       email: newUser.email,
       profilePic: newUser.profilePic,
     });
-
-    await sendWelcomeEmail(
-      savedUser.email,
-      savedUser.fullName,
-      ENV.CLIENT_URL || "http://localhost:5173/",
-    );
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.log("Error in register controller:", error.message);
