@@ -7,6 +7,24 @@
   syntax: "<angle>";
 }
 
+/* Theme extensions */
+@theme {
+  --animation-border: border 4s linear infinite;
+}
+
+/* Custom keyframes & utilities */
+@layer utilities {
+  @keyframes border {
+    to {
+      --border-angle: 360deg;
+    }
+  }
+
+  .animate-border {
+    animation: var(--animation-border);
+  }
+}
+
 .input {
   @apply w-full bg-slate-800/50 border border-slate-700 rounded-lg py-2 pl-10 pr-4 text-slate-200 placeholder-slate-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent;
 }
