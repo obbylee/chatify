@@ -17,10 +17,10 @@ export default function SignUpPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>();
 
-  const onSubmit = (data: SignUpFormData) => {
+  const onSubmit = async (data: SignUpFormData) => {
     signup(data);
   };
 
@@ -39,7 +39,9 @@ export default function SignUpPage() {
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   <div>
-                    <label className="auth-input-label">Full Name</label>
+                    <label htmlFor="fullName" className="auth-input-label">
+                      Full Name
+                    </label>
                     <div className="relative">
                       <UserIcon className="auth-input-icon" />
 
@@ -58,7 +60,9 @@ export default function SignUpPage() {
                   </div>
 
                   <div>
-                    <label className="auth-input-label">Email</label>
+                    <label htmlFor="email" className="auth-input-label">
+                      Email
+                    </label>
                     <div className="relative">
                       <MailIcon className="auth-input-icon" />
 
@@ -81,12 +85,15 @@ export default function SignUpPage() {
                   </div>
 
                   <div>
-                    <label className="auth-input-label">Password</label>
+                    <label htmlFor="password" className="auth-input-label">
+                      Password
+                    </label>
                     <div className="relative">
                       <LockIcon className="auth-input-icon" />
 
                       <input
                         type="password"
+                        autoComplete="off"
                         className="input"
                         placeholder="Enter your password"
                         {...register("password", {
@@ -103,7 +110,7 @@ export default function SignUpPage() {
                     )}
                   </div>
 
-                  <button className="auth-btn" type="submit" disabled={isSigningUp}>
+                  <button className="auth-btn" type="submit" disabled={isSigningUp || isSubmitting}>
                     {isSigningUp ? (
                       <LoaderIcon className="w-full h-5 animate-spin text-center" />
                     ) : (
@@ -120,8 +127,7 @@ export default function SignUpPage() {
               </div>
             </div>
 
-            {/* FORM ILLUSTRATION - RIGHT SIDE */}
-            <div className="hidden md:w-1/2 md:flex items-center justify-center p-6 bg-gradient-to-bl from-slate-800/20 to-transparent">
+            <div className="hidden md:w-1/2 md:flex items-center justify-center p-6 bg-linear-to-bl from-slate-800/20 to-transparent">
               <div>
                 <img
                   src="/signup.png"
