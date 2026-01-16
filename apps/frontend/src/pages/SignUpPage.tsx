@@ -17,7 +17,7 @@ export default function SignUpPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignUpFormData>();
 
   const onSubmit = async (data: SignUpFormData) => {
@@ -110,7 +110,7 @@ export default function SignUpPage() {
                     )}
                   </div>
 
-                  <button className="auth-btn" type="submit" disabled={isSigningUp || isSubmitting}>
+                  <button className="auth-btn" type="submit" disabled={isSigningUp}>
                     {isSigningUp ? (
                       <LoaderIcon className="w-full h-5 animate-spin text-center" />
                     ) : (
