@@ -16,7 +16,7 @@ export interface IMessage {
   isOptimistic?: boolean;
 }
 
-type ActiveTab = "chats" | "contacts";
+export type ActiveTab = "chats" | "contacts";
 
 interface ChatState {
   allContacts: IUser[];
