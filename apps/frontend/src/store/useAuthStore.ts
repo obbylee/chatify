@@ -29,7 +29,7 @@ export interface IUser {
   _id: string;
   email: string;
   fullName: string;
-  profilePic: string;
+  profilePic?: string;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -94,6 +94,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   logout: async () => {
     try {
       await axiosInstance.post("/auth/logout");
+    } catch {
+      toast.error("Logout failed");
     } finally {
       get().disconnectSocket();
       set({ authUser: null });
@@ -101,21 +103,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   updateProfile: async (data) => {
-    const res = await axiosInstance.put("/auth/profile", data);
-    set({ authUser: res.data });
-    toast.success("Profile updated");
+    try {
+      const res = await axiosInstance.put("/auth/update-profile", data);
+      set({ authUser: res.data });
+      toast.success("Profile updated");
+    } catch (error) {
+      toast.error("Failed to update profile");
+    }
   },
 
   connectSocket: () => {
     const { authUser, socket } = get();
     if (!authUser) return;
-    if (socket?.connected) return;
+
+    if (socket) {
+      socket.disconnect();
+    }
 
     const newSocket = io(BASE_URL, {
       query: { userId: authUser._id },
     });
 
-    newSocket.off("getOnlineUsers");
     newSocket.on("getOnlineUsers", (users: string[]) => {
       set({ onlineUsers: users });
     });

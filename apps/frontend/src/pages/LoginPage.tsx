@@ -77,7 +77,7 @@ export default function LoginPage() {
                         type="password"
                         className="input"
                         placeholder="Enter your password"
-                        autoComplete="current-password"
+                        autoComplete="off"
                         {...register("password", {
                           required: "Password is required",
                           minLength: {
