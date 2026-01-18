@@ -74,7 +74,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   getAllContacts: async () => {
     set({ isUsersLoading: true });
     try {
-      const res = await axiosInstance.get<IUser[]>("/messages/contacts");
+      const res = await axiosInstance.get<IUser[]>("/message/contacts");
       set({ allContacts: res.data });
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -88,7 +88,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   getMyChatPartners: async () => {
     set({ isUsersLoading: true });
     try {
-      const res = await axiosInstance.get<IUser[]>("/messages/chats");
+      const res = await axiosInstance.get<IUser[]>("/message/chats");
       set({ chats: res.data });
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -102,7 +102,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
   getMessagesByUserId: async (userId) => {
     set({ isMessagesLoading: true });
     try {
-      const res = await axiosInstance.get<IMessage[]>(`/messages/${userId}`);
+      const res = await axiosInstance.get<IMessage[]>(`/message/${userId}`);
       set({ messages: res.data });
     } catch {
       toast.error("Failed to load messages");
