@@ -5,9 +5,11 @@ import BorderAnimatedContainer from "../components/BorderAnimatedContainer";
 import ProfileHeader from "../components/ProfileHeader";
 import ChatsList from "../components/ChatsList";
 import ContactList from "../components/ContactList";
+import NoConversationPlaceholder from "../components/NoConversationPlaceholder";
+import ChatContainer from "../components/ChatContainer";
 
 export default function ChatPage() {
-  const { activeTab } = useChatStore();
+  const { activeTab, selectedUser } = useChatStore();
   return (
     <div className="relative w-full max-w-6xl h-[800px]">
       <BorderAnimatedContainer>
@@ -21,7 +23,7 @@ export default function ChatPage() {
         </div>
 
         <div className="flex-1 flex flex-col bg-slate-900/50 backdrop-blur-sm">
-          {/* {selectedUser ? <ChatContainer /> : <NoConversationPlaceholder />} */}
+          {selectedUser ? <ChatContainer /> : <NoConversationPlaceholder />}
         </div>
       </BorderAnimatedContainer>
     </div>
